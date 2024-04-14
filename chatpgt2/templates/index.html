@@ -1,0 +1,117 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        /* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+}
+
+.container {
+    max-width: 600px;
+    margin: 2em auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-box {
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    overflow-y: scroll;
+    max-height: 300px;
+    background-color: #fff;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 70%;
+    align-self: flex-end;
+}
+
+.ai-message {
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 70%;
+    align-self: flex-start;
+}
+
+.user-input-form {
+    display: flex;
+    margin-top: 10px;
+}
+
+.user-input-form input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #f0f2f5;
+    outline: none;
+}
+
+.user-input-form input[type="submit"] {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+    outline: none;
+}
+
+.user-input-form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Chatbot</h1>
+        <div class="chat-box" id="chat-box"></div>
+        <form class="user-input-form" id="user-input-form">
+            <input type="text" id="user-input" />
+            <input type="submit" value="Send" />
+        </form>
+    </div>
+    <script>
+        document.getElementById('user-input-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var userInput = document.getElementById('user-input').value;
+            document.getElementById('chat-box').innerHTML += '<div class="chat-message user-message"><p>' + userInput + '</p></div>';
+            fetch('/chat', {
+                method: 'POST',
+                body: JSON.stringify({user_input: userInput}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('chat-box').innerHTML += '<div class="chat-message ai-message"><p>' + data.response + '</p></div>';
+            });
+            document.getElementById('user-input').value = '';
+        });
+    </script>
+</body>
+</html>
